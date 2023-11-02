@@ -1,0 +1,12 @@
+.main {
+  position: relative;
+}
+.main-canvas {
+  display: block;
+  background-color: var(--bg-main);
+}
+.main-btns {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
