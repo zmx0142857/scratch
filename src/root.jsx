@@ -1,5 +1,6 @@
 // @refresh reload
-import { Suspense } from "solid-js";
+import { Suspense } from 'solid-js'
+
 import {
   Body,
   ErrorBoundary,
@@ -10,8 +11,9 @@ import {
   Routes,
   Scripts,
   Title,
-} from "solid-start";
-import "./root.css";
+} from 'solid-start'
+import './root.css'
+import '@mdi/font/css/materialdesignicons.min.css'
 export default function Root() {
   return (
     <Html lang="en">
@@ -31,5 +33,5 @@ export default function Root() {
         <Scripts />
       </Body>
     </Html>
-  );
+  )
 }

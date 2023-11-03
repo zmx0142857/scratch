@@ -1,6 +1,6 @@
 # Scratch
 
-草稿纸 app
+A scratch pad web app.
 
 ## Developing
 

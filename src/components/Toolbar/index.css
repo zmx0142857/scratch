@@ -1,0 +1,16 @@
+.c-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(102, 102, 102, 0.4);
+  padding: 10px 14px;
+  border-radius: 4px;
+}
+.c-toolbar .mdi {
+  font-size: 22px;
+  cursor: pointer;
+}
+.c-toolbar .mdi.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
