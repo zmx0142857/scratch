@@ -1,9 +1,7 @@
 .c-toolbar {
-  display: flex;
   gap: 8px;
-  align-items: center;
-  background: rgba(102, 102, 102, 0.4);
-  padding: 10px 14px;
+  background: rgba(180, 180, 180, 0.3);
+  padding: 8px 14px;
   border-radius: 4px;
 }
 .c-toolbar .mdi {

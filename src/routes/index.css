@@ -11,4 +11,8 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 10px;
+  transition: top .2s;
+}
+.main-toolbar.hidden {
+  top: -80px;
 }

@@ -7,7 +7,7 @@ body {
   body {
     --bg-body: #333;
     --bg-main: #222;
-    --fg-body: #f0f0f0;
+    --fg-body: #f2f2f2;
   }
 }
 html, body {
@@ -26,4 +26,9 @@ body {
 .g-full {
   width: 100%;
   height: 100%;
+}
+.g-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

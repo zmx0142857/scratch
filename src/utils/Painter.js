@@ -1,39 +1,18 @@
-import PainterHistory from './PainterHistory'
+import History from './History'
+import Palette from './Palette'
+import Pointer from './Pointer'
+import { commands, events } from './config'
 
-const commands = {
-  stroke: 0,
-  beginPath: 1,
-  moveTo: 2,
-  lineTo: 3,
-  clearRect: 4,
-}
-// 逆映射
-Object.entries(commands).forEach(([k, v]) => commands[v] = k)
-
+// 画布管理
 const Painter = ({ canvas, onChange }) => {
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   const ctx = canvas.getContext('2d')
-  const rect = canvas.getBoundingClientRect()
-  const history = PainterHistory({ onChange })
-  const mediaMatch = window.matchMedia('(prefers-color-scheme: dark)')
+  const history = History({ ctx, onChange })
+  const palette = Palette({ ctx, onChange })
+  const pointer = Pointer({ canvas, onChange, history })
 
-  const performTick = (tick, shouldSave = true) => {
-    const name = commands[tick[0]]
-    name && ctx[name]?.(...tick.slice(1))
-    if (shouldSave)
-      history.pushAction(tick)
-  }
-
-  const performAction = (action) => {
-    action.forEach(performTick)
-  }
-
-  const performHistory = () => {
-    history.getHistory().forEach(performAction)
-  }
-
-  const blank = (shouldSave = true) => {
+  const clear = (shouldSave = true) => {
     const { width, height } = canvas
     ctx.clearRect(0, 0, width, height)
     if (shouldSave)
@@ -43,84 +22,43 @@ const Painter = ({ canvas, onChange }) => {
   const undo = () => {
     const action = history.popHistory()
     if (action) {
-      blank(false)
+      clear(false)
       history.pushUndo(action)
-      performHistory()
+      history.performHistory()
     }
   }
 
   const redo = () => {
     const action = history.popUndo()
     if (action) {
-      performAction(action)
+      history.performAction(action)
       history.pushHistory(action)
     }
   }
 
-  const getXY = (e) => {
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    return [x, y]
-  }
-
-  const onMouseDown = (e) => {
-    let isMove = false
-    const [x, y] = getXY(e)
-    performTick([commands.beginPath])
-    performTick([commands.moveTo, x, y])
-
-    const onMouseMove = (e) => {
-      isMove = true
-      const [x, y] = getXY(e)
-      performTick([commands.lineTo, x, y])
-      performTick([commands.stroke], false)
-      performTick([commands.beginPath], false)
-      performTick([commands.moveTo, x, y], false)
-    }
-
-    const onClick = (e) => {
-      history.clearAction()
-    }
-
-    const onDragEnd = (e) => {
-      performTick([commands.stroke])
-      history.pushHistory()
-    }
-
-    const onMouseUp = (e) => {
-      if (isMove)
-        onDragEnd(e)
-      else
-        onClick(e)
-      document.removeEventListener('pointermove', onMouseMove)
-      document.removeEventListener('pointerup', onMouseUp)
-    }
-    document.addEventListener('pointermove', onMouseMove)
-    document.addEventListener('pointerup', onMouseUp)
-  }
-
-  const onMediaChange = (e) => {
-    // console.log('isDark', e.matches)
-    ctx.strokeStyle = e.matches ? '#f0f0f0' : '#222'
+  const onBeforeUnload = (e) => {
+    e.preventDefault()
+    e.returnValue = ''
   }
 
   const destroy = () => {
-    canvas.removeEventListener('pointerdown', onMouseDown)
-    mediaMatch.removeEventListener('change', onMediaChange)
+    history.destroy()
+    palette.destroy()
+    pointer.destroy()
+    window.removeEventListener('beforeunload', onBeforeUnload)
   }
 
-  onMediaChange(mediaMatch)
-  mediaMatch.addEventListener('change', onMediaChange)
-  canvas.addEventListener('pointerdown', onMouseDown)
+  // 关闭窗口前, 提示用户保存数据
+  window.addEventListener('beforeunload', onBeforeUnload)
 
   return {
     destroy,
-    blank,
+    clear,
     undo,
     redo,
   }
 }
 
-Painter.events = PainterHistory.events
+Painter.events = events
 
 export default Painter

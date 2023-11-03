@@ -1,24 +1,13 @@
-import classNames from 'classnames'
+import clsx from 'clsx'
+import { historyLength, undoLength } from '~/store'
 import './index.css'
 
-export default function Toolbar({ painter, historyLength, undoLength }) {
-  const onUndo = () => {
-    painter().undo()
-  }
-
-  const onRedo = () => {
-    painter().redo()
-  }
-
-  const onBlank = () => {
-    painter().blank()
-  }
-
+export default function Toolbar({ painter }) {
   return (
-    <div className="c-toolbar">
-      <i class={classNames('mdi mdi-undo', { disabled: !historyLength() })} title="Undo" onClick={onUndo} />
-      <i class={classNames('mdi mdi-redo', { disabled: !undoLength() })} title="Redo" onClick={onRedo} />
-      <i class="mdi mdi-cancel" title="Blank" onClick={onBlank} />
+    <div className="c-toolbar g-center">
+      <i class={clsx('mdi mdi-undo', { disabled: !historyLength() })} title="Undo" onClick={() => painter().undo()} />
+      <i class={clsx('mdi mdi-redo', { disabled: !undoLength() })} title="Redo" onClick={() => painter().redo()} />
+      <i class="mdi mdi-cancel" title="Clear" onClick={() => painter().clear()} />
     </div>
   )
 }
