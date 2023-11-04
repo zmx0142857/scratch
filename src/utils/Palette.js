@@ -14,13 +14,15 @@ const Palette = (painter) => {
   }
 
   const paintBg = () => {
+    const { canvas, ctx } = painter
+    const { width, height } = canvas
+    ctx.clearRect(0, 0, width, height)
+    ctx.fillRect(0, 0, width, height)
     const bg = bgType()
     switch (bg) {
       case bgTypes.blank: break
       case bgTypes.mesh: {
         const meshSize = 20
-        const { width, height } = painter.canvas
-        const { ctx } = painter
         const style = ctx.strokeStyle
         ctx.strokeStyle = colors[theme].mesh
         ctx.beginPath()

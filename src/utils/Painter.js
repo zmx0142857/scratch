@@ -3,7 +3,8 @@ import Palette from './Palette'
 import Pointer from './Pointer'
 import Zoom from './Zoom'
 import { commands, events } from './config'
-import { setHistoryLength, setShowToolbar, setUndoLength } from '~/store'
+import { download } from '.'
+import { historyLength, setHistoryLength, setShowToolbar, setUndoLength } from '~/store'
 
 // 画布管理
 const Painter = ({ canvas }) => {
@@ -29,12 +30,12 @@ const Painter = ({ canvas }) => {
   const zoom = addComponent(Zoom, 'zoom')
 
   const clear = (shouldSave = true) => {
-    const { width, height } = canvas
-    // painter.ctx.clearRect(0, 0, width, height)
-    painter.ctx.fillRect(0, 0, width, height)
     palette.paintBg()
-    if (shouldSave)
-      history.pushHistory([[commands.clearRect, 0, 0, width, height]])
+    if (shouldSave) {
+      history.pushHistory([
+        [commands.custom, 'palette', 'paintBg'],
+      ])
+    }
   }
 
   const repaint = () => {
@@ -59,24 +60,25 @@ const Painter = ({ canvas }) => {
     }
   }
 
+  // 关闭窗口前, 提示用户保存数据
   const onBeforeUnload = (e) => {
-    e.preventDefault()
-    e.returnValue = ''
+    if (historyLength()) {
+      e.preventDefault()
+      e.returnValue = ''
+    }
   }
 
-  const exportPng = (filename = 'export.png') => {
-    const a = document.createElement('a')
-    a.href = canvas.toDataURL()
-    a.download = filename
-    a.style.display = 'none'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+  const exportPng = () => {
+    download({ url: canvas.toDataURL() })
+  }
+
+  const exportHistory = () => {
+    const str = JSON.stringify(history.getHistory())
+    download({ str })
   }
 
   const init = () => {
     painter.components.forEach(component => component.init?.())
-    // 关闭窗口前, 提示用户保存数据
     window.addEventListener('beforeunload', onBeforeUnload)
   }
 
@@ -104,6 +106,7 @@ const Painter = ({ canvas }) => {
     repaint,
     onChange,
     exportPng,
+    exportHistory,
     ...zoom,
   })
 

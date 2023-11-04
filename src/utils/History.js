@@ -6,6 +6,8 @@ const History = (painter) => {
   const history = []
   const undo = []
 
+  const getHistory = () => history
+
   const clearAction = () => {
     currentAction = []
   }
@@ -50,8 +52,14 @@ const History = (painter) => {
   }
 
   const perform = (tick, shouldSave = true) => {
-    const name = commands[tick[0]]
-    name && painter.ctx[name]?.(...tick.slice(1))
+    const id = tick[0]
+    if (id === commands.custom) {
+      const [_, component, method, ...args] = tick
+      painter[component]?.[method]?.(...args)
+    } else {
+      const name = commands[id]
+      name && painter.ctx[name]?.(...tick.slice(1))
+    }
     if (shouldSave)
       pushAction(tick)
   }
@@ -73,6 +81,7 @@ const History = (painter) => {
   }
 
   return {
+    getHistory,
     pushAction,
     pushHistory,
     pushUndo,

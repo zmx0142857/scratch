@@ -20,7 +20,7 @@ const Zoom = () => {
 
   const zoomOut = () => {
     const { x, y, scale } = canvasTransform()
-    const newScale = zooms.findLast(v => v < scale)
+    const newScale = zooms.slice().reverse().find(v => v < scale) // firefox android does not support [].findLast()
     if (newScale)
       setTransform(x, y, scale, newScale)
   }

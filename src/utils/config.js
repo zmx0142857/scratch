@@ -8,6 +8,7 @@ export const events = {
 }
 
 export const commands = {
+  custom: -1,
   stroke: 0,
   beginPath: 1,
   moveTo: 2,
@@ -21,7 +22,7 @@ export const colors = {
   light: {
     fg: '#222',
     bg: '#f2f2f2',
-    mesh: '#eee',
+    mesh: '#e6e6e6',
   },
   dark: {
     fg: '#f2f2f2',

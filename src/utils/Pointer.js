@@ -8,6 +8,7 @@ const Pointer = (painter) => {
   const getXY = (e) => {
     const rect = painter.canvas.getBoundingClientRect()
     const { scale } = canvasTransform()
+    // e.preventDefault() // causes error thus stopped event propagation, see https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#improving_scrolling_performance_with_passive_listeners
     return [
       (e.clientX - rect.left) / scale,
       (e.clientY - rect.top) / scale,
@@ -49,11 +50,19 @@ const Pointer = (painter) => {
           }, 200)
         }
       }
-      document.removeEventListener('pointermove', onPointerMove)
-      document.removeEventListener('pointerup', onPointerUp)
+      document.removeEventListener('pointermove', onPointerMove, true)
+      document.removeEventListener('pointerup', onPointerUp, true)
+      // document.removeEventListener('mousemove', onPointerMove)
+      // document.removeEventListener('mouseup', onPointerUp)
+      // document.removeEventListener('touchmove', onPointerMove, true)
+      // document.removeEventListener('touchup', onPointerUp, true)
     }
-    document.addEventListener('pointermove', onPointerMove)
-    document.addEventListener('pointerup', onPointerUp)
+    document.addEventListener('pointermove', onPointerMove, true)
+    document.addEventListener('pointerup', onPointerUp, true)
+    // document.addEventListener('mousemove', onPointerMove)
+    // document.addEventListener('mouseup', onPointerUp)
+    // document.addEventListener('touchmove', onPointerMove, true)
+    // document.addEventListener('touchup', onPointerUp, true)
   }
 
   const init = () => {

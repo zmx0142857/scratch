@@ -1,18 +1,47 @@
 .c-toolbar {
-  gap: 8px;
   background: rgba(180, 180, 180, 0.3);
-  padding: 8px 14px;
+  padding: 6px;
   border-radius: 4px;
   user-select: none;
+  line-height: 24px;
+  gap: 4px;
 }
 .c-toolbar .mdi {
-  font-size: 22px;
+  font-size: 24px;
+}
+.c-toolbar-item {
+  padding: 6px;
+  border-radius: 4px;
+  text-align: center;
   cursor: pointer;
 }
-.c-toolbar .mdi.disabled {
+.c-toolbar-item:hover {
+  background: rgba(180, 180, 180, 0.3);
+}
+.c-toolbar-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.c-toolbar .btn-zoom-reset {
+.c-toolbar-item.disabled:hover {
+  background: transparent;
+}
+.c-toolbar-item-zoom-reset {
   cursor: pointer;
+}
+
+.c-toolbar-dropdown {
+  position: absolute;
+  top: 100%;
+  background: rgba(180, 180, 180, 0.3);
+  padding: 6px;
+  border-radius: 4px;
+  line-height: 28px;
+}
+.c-toolbar-dropdown-item {
+  padding: 0 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.c-toolbar-dropdown-item:hover {
+  background: rgba(180, 180, 180, 0.3);
 }
