@@ -17,12 +17,24 @@ export const commands = {
 // 逆映射
 Object.entries(commands).forEach(([k, v]) => commands[v] = k)
 
-export const lightTheme = {
-  fg: '#222',
-  bg: '#f2f2f2',
+export const colors = {
+  light: {
+    fg: '#222',
+    bg: '#f2f2f2',
+    mesh: '#eee',
+  },
+  dark: {
+    fg: '#f2f2f2',
+    bg: '#222',
+    mesh: '#333',
+  },
 }
 
-export const darkTheme = {
-  fg: '#f2f2f2',
-  bg: '#222',
+export const zooms = [0.5, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0]
+export const minZoom = Math.min(...zooms)
+export const maxZoom = Math.max(...zooms)
+
+export const bgTypes = {
+  mesh: 0,
+  blank: 1,
 }

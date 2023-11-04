@@ -1,8 +1,9 @@
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import clsx from 'clsx'
 import Toolbar from '~/components/Toolbar'
 import Painter from '~/utils/Painter'
-import { setHistoryLength, setUndoLength } from '~/store'
+import { canvasTransform, showToolbar } from '~/store'
+import Scrollbar from '~/components/Scrollbar'
 import './index.css'
 
 const { events } = Painter
@@ -10,20 +11,14 @@ const { events } = Painter
 const Home = () => {
   const [canvas, setCanvas] = createSignal()
   const [painter, setPainter] = createSignal()
-  const [showToolbar, setShowToolbar] = createSignal(true)
+  const transform = createMemo(() => {
+    const { x, y, scale } = canvasTransform()
+    return `scale(${scale}) translate(${x}px, ${y}px)`
+  })
 
   createEffect(() => {
     const painter = Painter({
       canvas: canvas(),
-      onChange(type, ...args) {
-        // console.log('onChange', type)
-        switch (type) {
-          case events.historyLength: return setHistoryLength(...args)
-          case events.undoLength: return setUndoLength(...args)
-          case events.click: return setShowToolbar(show => !show)
-          default: break
-        }
-      },
     })
     setPainter(painter)
     onCleanup(() => {
@@ -33,10 +28,14 @@ const Home = () => {
 
   return (
     <main class="main g-full">
-      <canvas class="main-canvas" ref={setCanvas} />
+      <canvas class={clsx('main-canvas', { transition: canvasTransform().transition })}
+        style={{ transform: transform() }}
+        ref={setCanvas}
+      />
       <div className={clsx('main-toolbar', { hidden: !showToolbar() })}>
         <Toolbar painter={painter} />
       </div>
+      <Scrollbar />
     </main>
   )
 }

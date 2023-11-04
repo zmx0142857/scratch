@@ -3,6 +3,7 @@
   background: rgba(180, 180, 180, 0.3);
   padding: 8px 14px;
   border-radius: 4px;
+  user-select: none;
 }
 .c-toolbar .mdi {
   font-size: 22px;
@@ -11,4 +12,7 @@
 .c-toolbar .mdi.disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.c-toolbar .btn-zoom-reset {
+  cursor: pointer;
 }

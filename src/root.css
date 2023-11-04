@@ -2,12 +2,14 @@ body {
   --bg-body: #f2f2f2;
   --bg-main: #fff;
   --fg-body: #222;
+  --fg-scroll: #e0e0e0;
 }
 @media (prefers-color-scheme: dark) {
   body {
     --bg-body: #333;
     --bg-main: #222;
     --fg-body: #f2f2f2;
+    --fg-scroll: #555;
   }
 }
 html, body {

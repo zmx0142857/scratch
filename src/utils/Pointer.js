@@ -1,19 +1,24 @@
 import { commands, events } from './config'
+import { canvasTransform } from '~/store'
 
 // 鼠标、触摸事件
-const Pointer = ({ canvas, onChange, history }) => {
-  const rect = canvas.getBoundingClientRect()
+const Pointer = (painter) => {
   let clickTimer
 
   const getXY = (e) => {
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    return [x, y]
+    const rect = painter.canvas.getBoundingClientRect()
+    const { scale } = canvasTransform()
+    return [
+      (e.clientX - rect.left) / scale,
+      (e.clientY - rect.top) / scale,
+    ]
   }
 
   const onPointerDown = (e) => {
+    const { history } = painter
     let isMove = false
     const [x, y] = getXY(e)
+    history.clearAction()
     history.perform([commands.beginPath]) // 调用 history.perform 渐进地构建一个动作 (action)
     history.perform([commands.moveTo, x, y])
 
@@ -30,17 +35,17 @@ const Pointer = ({ canvas, onChange, history }) => {
       if (isMove) {
         history.perform([commands.stroke])
         history.pushHistory() // 完成构建, 将 action 保存到 history 中
-        onChange?.(events.dragEnd, e)
+        painter.onChange?.(events.dragEnd, e)
       } else {
         history.clearAction() // 取消刚刚构建的 action
         if (clickTimer) {
           clearTimeout(clickTimer)
           clickTimer = undefined
-          onChange?.(events.doubleClick, e)
+          painter.onChange?.(events.doubleClick, e)
         } else {
           clickTimer = setTimeout(() => {
             clickTimer = undefined
-            onChange?.(events.click, e)
+            painter.onChange?.(events.click, e)
           }, 200)
         }
       }
@@ -51,13 +56,16 @@ const Pointer = ({ canvas, onChange, history }) => {
     document.addEventListener('pointerup', onPointerUp)
   }
 
-  const destroy = () => {
-    canvas.removeEventListener('pointerdown', onPointerDown)
+  const init = () => {
+    painter.canvas.addEventListener('pointerdown', onPointerDown)
   }
 
-  canvas.addEventListener('pointerdown', onPointerDown)
+  const destroy = () => {
+    painter.canvas.removeEventListener('pointerdown', onPointerDown)
+  }
 
   return {
+    init,
     destroy,
   }
 }

@@ -1,0 +1,3 @@
+export const between = (value, min, max) => {
+  return Math.max(min, Math.min(max, value))
+}

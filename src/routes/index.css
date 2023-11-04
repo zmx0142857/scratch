@@ -1,9 +1,13 @@
 .main {
   position: relative;
+  overflow: hidden;
 }
 .main-canvas {
   display: block;
   background-color: var(--bg-main);
+}
+.main-canvas.transition {
+  transition: transform .2s;
 }
 .main-toolbar {
   position: absolute;
