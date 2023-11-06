@@ -4,12 +4,15 @@ import { bgType } from '~/store'
 // 画布颜色、线条配置
 const Palette = (painter) => {
   const mediaMatch = window.matchMedia('(prefers-color-scheme: dark)')
-
+  const dpr = window.devicePixelRatio
   let theme
+
   const onMediaChange = (e) => {
     theme = e.matches ? 'dark' : 'light'
-    painter.ctx.strokeStyle = colors[theme].fg
-    painter.ctx.fillStyle = colors[theme].bg
+    const { ctx } = painter
+    ctx.strokeStyle = colors[theme].fg
+    ctx.lineWidth = dpr
+    ctx.fillStyle = colors[theme].bg
     painter.onChange?.(events.theme, theme)
   }
 
@@ -22,7 +25,7 @@ const Palette = (painter) => {
     switch (bg) {
       case bgTypes.blank: break
       case bgTypes.mesh: {
-        const meshSize = 20
+        const meshSize = 20 * dpr
         const style = ctx.strokeStyle
         ctx.strokeStyle = colors[theme].mesh
         ctx.beginPath()

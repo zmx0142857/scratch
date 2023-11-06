@@ -8,8 +8,16 @@ import { historyLength, setHistoryLength, setShowToolbar, setUndoLength } from '
 
 // 画布管理
 const Painter = ({ canvas }) => {
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
+  const dpr = window.devicePixelRatio
+  // const dpr = 1
+  const width = window.innerWidth
+  const height = window.innerHeight
+  canvas.width = width * dpr
+  canvas.height = height * dpr
+  Object.assign(canvas.style, {
+    width: `${width}px`,
+    height: `${height}px`,
+  })
   const painter = {
     canvas,
     ctx: canvas.getContext('2d'),

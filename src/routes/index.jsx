@@ -6,8 +6,6 @@ import { canvasTransform, showToolbar } from '~/store'
 import Scrollbar from '~/components/Scrollbar'
 import './index.css'
 
-const { events } = Painter
-
 const Home = () => {
   const [canvas, setCanvas] = createSignal()
   const [painter, setPainter] = createSignal()

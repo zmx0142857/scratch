@@ -5,19 +5,22 @@ import { animCanvasTransform, canvasTransform, setCanvasTransform } from '~/stor
 // 鼠标、触摸事件
 const Pointer = (painter) => {
   let clickTimer
+  const dpr = window.devicePixelRatio
+  const touches = {}
+  const moves = {}
+  let isMove = false
+  let transform = {}
 
   const getXY = (e) => {
     const rect = painter.canvas.getBoundingClientRect()
     const { scale } = canvasTransform()
     // e.preventDefault() // causes error thus stopped event propagation, see https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#improving_scrolling_performance_with_passive_listeners
     return [
-      (e.clientX - rect.left) / scale,
-      (e.clientY - rect.top) / scale,
+      (e.clientX - rect.left) * dpr / scale,
+      (e.clientY - rect.top) * dpr / scale,
     ]
   }
 
-  const touches = {}
-  const moves = {}
   const addTouch = (e) => {
     touches[e.pointerId] = e
   }
@@ -33,24 +36,19 @@ const Pointer = (painter) => {
     moves[e.pointerId] = e
   }
 
-  let bounceTimer
   const bounceBack = () => {
-    const { canvas } = painter
+    const container = painter.canvas.parentElement
     const transform = canvasTransform()
     const k = 1 / transform.scale
-    bounceTimer = setTimeout(() => {
-      const maxX = halfBlank(k, canvas.width)
-      const maxY = halfBlank(k, canvas.height)
-      animCanvasTransform({
-        x: between(transform.x, -maxX, maxX),
-        y: between(transform.y, -maxY, maxY),
-        scale: transform.scale,
-      })
-    }, 50)
+    const maxX = halfBlank(k, container.offsetWidth)
+    const maxY = halfBlank(k, container.offsetHeight)
+    animCanvasTransform({
+      x: between(transform.x, -maxX, maxX),
+      y: between(transform.y, -maxY, maxY),
+      scale: transform.scale,
+    })
   }
 
-  let isMove = false
-  let transform = {}
   const onPointerDown = (e) => {
     addTouch(e)
     addMove(e)
