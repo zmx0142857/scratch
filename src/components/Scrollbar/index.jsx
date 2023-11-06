@@ -3,9 +3,8 @@ import { createMemo, createSignal, onCleanup } from 'solid-js'
 import { animCanvasTransform, canvasTransform, setCanvasTransform } from '~/store'
 import { between, halfBlank } from '~/utils'
 import './index.css'
-import Zoom from '~/utils/Zoom'
 
-const Scrollbar = () => {
+const Scrollbar = ({ painter }) => {
   const [vertical, setVertical] = createSignal()
   const [horizontal, setHorizontal] = createSignal()
 
@@ -22,8 +21,6 @@ const Scrollbar = () => {
       left: isZoomIn ? `translateX(${halfBlank(k, width) - x}px)` : undefined,
     }
   })
-
-  const zoom = Zoom()
 
   const onVerticalDown = (e) => {
     const el = e.target
@@ -70,9 +67,9 @@ const Scrollbar = () => {
     if (ctrlKey) {
       e.preventDefault()
       if (deltaY < 0)
-        zoom.zoomIn()
+        painter().zoomIn()
       else if (deltaY > 0)
-        zoom.zoomOut()
+        painter().zoomOut()
     } else if (shiftKey) {
       if (!isZoomIn)
         return

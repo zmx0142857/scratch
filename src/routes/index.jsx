@@ -35,7 +35,7 @@ const Home = () => {
       <div className={clsx('main-toolbar', { hidden: !showToolbar() })}>
         <Toolbar painter={painter} />
       </div>
-      <Scrollbar />
+      <Scrollbar painter={painter} />
     </main>
   )
 }

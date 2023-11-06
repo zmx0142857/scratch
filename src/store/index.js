@@ -8,6 +8,7 @@ const [canvasTransform, setCanvasTransform] = createSignal({ x: 0, y: 0, scale: 
 const [bgType, setBgType] = createSignal(bgTypes.mesh) // 画布背景
 const [showToolbar, setShowToolbar] = createSignal(true) // 显示工具栏
 const [i18n, setI18n] = createSignal(enUS)
+const [logs, setLogs] = createSignal([])
 
 let canvasTransformTimer
 const animCanvasTransform = (transform) => {
@@ -16,6 +17,10 @@ const animCanvasTransform = (transform) => {
   canvasTransformTimer = setTimeout(() => {
     setCanvasTransform(transform)
   }, 200)
+}
+
+const addLog = (log) => {
+  setLogs([...logs(), log])
 }
 
 const init = async () => {
@@ -42,4 +47,7 @@ export {
   setShowToolbar,
   /** @type {typeof enUS} */
   i18n,
+  logs,
+  addLog,
+  setLogs,
 }

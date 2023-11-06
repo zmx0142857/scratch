@@ -43,6 +43,8 @@ export default function Toolbar({ painter }) {
   const operator = method => () => {
     hideDropdown()
     painter()[method]?.()
+    // if (method === 'clear')
+    //   setLogs([])
   }
 
   return (
@@ -71,6 +73,11 @@ export default function Toolbar({ painter }) {
           </div>
         </div>
       </Show>
+      {/* <div class="c-toolbar-logs">
+        <For each={logs()}>
+          {item => <div>{item}</div>}
+        </For>
+      </div> */}
     </div>
   )
 }

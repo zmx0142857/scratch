@@ -45,3 +45,8 @@
 .c-toolbar-dropdown-item:hover {
   background: rgba(180, 180, 180, 0.3);
 }
+.c-toolbar-logs {
+  position: absolute;
+  top: 80px;
+  pointer-events: none;
+}
