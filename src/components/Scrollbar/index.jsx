@@ -1,36 +1,36 @@
 import clsx from 'clsx'
 import { createMemo, createSignal, onCleanup } from 'solid-js'
 import { animCanvasTransform, canvasTransform, setCanvasTransform } from '~/store'
-import { between } from '~/utils'
+import { between, halfBlank } from '~/utils'
 import './index.css'
+import Zoom from '~/utils/Zoom'
 
 const Scrollbar = () => {
   const [vertical, setVertical] = createSignal()
   const [horizontal, setHorizontal] = createSignal()
-
-  const halfBlank = (scale, size) => {
-    return (1 - 1 / scale) * size / 2 | 0
-  }
 
   const transform = createMemo(() => {
     const { x, y, scale } = canvasTransform()
     const width = horizontal()?.parentElement.offsetWidth || 0
     const height = vertical()?.parentElement.offsetHeight || 0
     const isZoomIn = scale > 1
+    const k = 1 / scale
     return {
       isZoomIn,
-      size: isZoomIn ? `${parseInt(100 / scale)}%` : undefined,
-      top: isZoomIn ? `translateY(${halfBlank(scale, height) - y}px)` : undefined,
-      left: isZoomIn ? `translateX(${halfBlank(scale, width) - x}px)` : undefined,
+      size: isZoomIn ? `${parseInt(100 * k)}%` : undefined,
+      top: isZoomIn ? `translateY(${halfBlank(k, height) - y}px)` : undefined,
+      left: isZoomIn ? `translateX(${halfBlank(k, width) - x}px)` : undefined,
     }
   })
+
+  const zoom = Zoom()
 
   const onVerticalDown = (e) => {
     const el = e.target
     el.classList.add('active')
     const dy = el.offsetTop - e.clientY
     const { x, y, scale } = canvasTransform()
-    const maxY = halfBlank(scale, el.parentElement.offsetHeight)
+    const maxY = halfBlank(1 / scale, el.parentElement.offsetHeight)
     const onMove = (e) => {
       const newY = between(y - e.clientY - dy, -maxY, maxY)
       setCanvasTransform({ x, y: newY, scale })
@@ -49,7 +49,7 @@ const Scrollbar = () => {
     el.classList.add('active')
     const dx = el.offsetLeft - e.clientX
     const { x, y, scale } = canvasTransform()
-    const maxX = halfBlank(scale, el.parentElement.offsetWidth)
+    const maxX = halfBlank(1 / scale, el.parentElement.offsetWidth)
     const onMove = (e) => {
       const newX = between(x - e.clientX - dx, -maxX, maxX)
       setCanvasTransform({ x: newX, y, scale })
@@ -64,26 +64,35 @@ const Scrollbar = () => {
   }
 
   const onWheel = (e) => {
-    if (!transform().isZoomIn)
-      return
-    const { shiftKey, deltaY } = e
+    const { shiftKey, ctrlKey, deltaY } = e
     const { x, y, scale } = canvasTransform()
-    if (shiftKey) {
+    const { isZoomIn } = transform()
+    if (ctrlKey) {
+      e.preventDefault()
+      if (deltaY < 0)
+        zoom.zoomIn()
+      else if (deltaY > 0)
+        zoom.zoomOut()
+    } else if (shiftKey) {
+      if (!isZoomIn)
+        return
       const el = horizontal()
-      const maxX = halfBlank(scale, el.parentElement.offsetWidth)
+      const maxX = halfBlank(1 / scale, el.parentElement.offsetWidth)
       const newX = between(x - el.offsetLeft - deltaY, -maxX, maxX)
       animCanvasTransform({ x: newX, y, scale })
     } else {
+      if (!isZoomIn)
+        return
       const el = vertical()
-      const maxY = halfBlank(scale, el.parentElement.offsetHeight)
+      const maxY = halfBlank(1 / scale, el.parentElement.offsetHeight)
       const newY = between(y - el.offsetTop - deltaY, -maxY, maxY)
       animCanvasTransform({ x, y: newY, scale })
     }
   }
 
-  document.addEventListener('wheel', onWheel)
+  document.addEventListener('wheel', onWheel, { passive: false })
   onCleanup(() => {
-    document.removeEventListener('wheel', onWheel)
+    document.removeEventListener('wheel', onWheel, { passive: false })
   })
 
   return (
