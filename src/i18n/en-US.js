@@ -6,7 +6,7 @@ export default {
     export: 'Export',
     zoomIn: 'Zoom In',
     zoomOut: 'Zoom Out',
-    zoomReset: 'Zoom Reset',
+    zoomReset: 'Reset',
     exportPng: 'Export PNG',
     exportPngHint: 'You can also right click on the canvas and save the image',
     exportHistory: 'Export History (Experimental)',

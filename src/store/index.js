@@ -24,11 +24,9 @@ const addLog = (log) => {
 }
 
 const init = async () => {
-  import(`../i18n/${window.navigator.language}`).then((res) => {
-    setI18n(res.default)
-  }).catch((err) => {
-    console.error(err)
-  })
+  const { language } = window.navigator
+  if (['en-US', 'zh-CN'].includes(language))
+    import(`../i18n/${language}.js`).then(res => setI18n(res.default)).catch(console.error)
 }
 
 init()

@@ -18,6 +18,7 @@
 .c-toolbar-item:hover {
   background: rgba(180, 180, 180, 0.3);
 }
+.mdi.disabled,
 .c-toolbar-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -25,8 +26,9 @@
 .c-toolbar-item.disabled:hover {
   background: transparent;
 }
-.c-toolbar-item-zoom-reset {
+.c-toolbar-item-zoom {
   cursor: pointer;
+  width: 50px;
 }
 
 .c-toolbar-dropdown {
@@ -36,6 +38,7 @@
   padding: 6px;
   border-radius: 4px;
   line-height: 28px;
+  transition: left .2s;
 }
 .c-toolbar-dropdown-item {
   padding: 0 4px;
