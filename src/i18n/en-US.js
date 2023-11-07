@@ -4,6 +4,7 @@ export default {
     redo: 'Redo',
     clear: 'Clear',
     export: 'Export',
+    zoom: 'Zoom',
     zoomIn: 'Zoom In',
     zoomOut: 'Zoom Out',
     zoomReset: 'Reset',

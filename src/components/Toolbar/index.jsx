@@ -35,7 +35,7 @@ export default function Toolbar({ painter }) {
     //   setLogs([])
   }
 
-  const toggleDropdown = (type, { items = [], style } = {}) => (e) => {
+  const toggleDropdown = (type, { items = () => [], style } = {}) => (e) => {
     if (!e.target)
       return
     const padding = 10
@@ -62,7 +62,7 @@ export default function Toolbar({ painter }) {
       <span class="c-toolbar-item mdi mdi-download"
         title={i18n().toolbar.export}
         onClick={toggleDropdown('export', {
-          items: [
+          items: () => [
             {
               title: i18n().toolbar.exportPngHint,
               onClick: operator('exportPng'),
@@ -76,10 +76,10 @@ export default function Toolbar({ painter }) {
         })}
       />
       <span class="c-toolbar-item c-toolbar-item-zoom"
-        title={i18n().toolbar.zoomReset}
+        title={i18n().toolbar.zoom}
         onClick={toggleDropdown('zoom', {
           style: { display: 'flex' },
-          items: [
+          items: () => [
             {
               onClick: operator('zoomIn', { hide: false }),
               children: <span class={clsx('mdi mdi-plus', { disabled: canvasTransform().scale >= maxZoom })} title={i18n().toolbar.zoomIn} />,
@@ -100,7 +100,7 @@ export default function Toolbar({ painter }) {
       {/* dropdown */}
       <Show when={dropdown().show}>
         <div class="c-toolbar-dropdown" style={dropdown().style}>
-          <For each={dropdown().items}>
+          <For each={dropdown().items()}>
             {item => (
               <div class="c-toolbar-dropdown-item"
                 title={item.title}

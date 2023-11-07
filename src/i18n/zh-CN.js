@@ -4,6 +4,7 @@ export default {
     redo: '重做',
     clear: '清空',
     export: '导出',
+    zoom: '显示比例',
     zoomIn: '放大',
     zoomOut: '缩小',
     zoomReset: '还原',
